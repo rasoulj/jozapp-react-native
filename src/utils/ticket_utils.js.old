@@ -1,0 +1,455 @@
+import set from "@babel/runtime/helpers/esm/set";
+import {baseApiUrl, getOnError} from "./db_mongo";
+import {getItem, saveItem} from "./local_db";
+
+// const client_id = "mwv0iiJwFI6iHPefIK2ZryMYPt1P+IdoQFBNJJuPZbw="; //&
+// const client_secret = "DWXUvI8tn6Q15zNRtD2UX0uoDSlEk6DMidu37TLlqUkCfY+9fGOdRNWnIG4goper"; //&
+
+
+const client_id = "MQ5eGzxtYyEm4FbckJ74EsLAQXe4Q48nYiTDAFBQUPk="; //&
+const client_secret = "MQ5eGzxtYyEm4FbckJ74EsLAQXe4Q48nYiTDAFBQUPk=";//&
+const grant_type = "client_credentials";
+import {Colors} from "react-native-paper";
+
+export const ticket_credentials = `client_id=${client_id}&\nclient_secret=${client_secret}&\ngrant_type=${grant_type}`;
+
+// export const ticketBaseUrl = "https://api.bluetriip.com";
+export const ticketBaseUrl = "http://test-apii.safiran.ir";
+// export const ticketBaseApi = `${ticketBaseUrl}api/v2/`;
+export const ticketBaseApi = `${ticketBaseUrl}/api/v2/flight/`;
+
+const INVALID_TOKEN = "INVALID_TOKEN";
+let ticket_token = INVALID_TOKEN;
+
+const Srv = {
+    token: "token",
+    airports: "airports",
+    search: "search",
+    book: "book",
+    issue: "issue",
+};
+
+const bookData = {
+    "searchId": "2118749",
+    "searchType": 2,
+    "selected": [
+        {
+            "id": null,
+            "route": "رفت",
+            "serializedExtraInfo": "{\"fareInfoes\":[],\"fareSourceCode\":\"37343732663838663635306434313962386662643463363064366335333161372632363926323238333132373439\",\"fareType\":3,\"ep\":\"1Oz52g3NEDs7ZIOVSErBeQqZI6OqGRgvVtiKX9flh0LkpBf/+/LnoEmQIpEff1yEUJsavI3FbTCu61uxG+Y+h3yiwXWP9PvYEjhDZ+1cnuB9ZYbypbk9BVgjEX5OMd9v\",\"deeplinkTraceId\":null,\"channelType\":2,\"flightRule\":null,\"passengerCount\":1}",
+            "discount": 0.0,
+            "discountPercent": 0.0,
+            "searchId": "2118749",
+            "totalPrice": 7720000.0,
+            "totalTax": 0.0,
+            "listPrice": 7720000.0,
+            "baseFare": 7190000.0,
+            "fareTax": 530000.0,
+            "serviceTax": 0.00,
+            "commission": 0.0,
+            "computedCommission": 0.0,
+            "price": 7720000.00,
+            "markUp": 0.0,
+            "markDown": 0.0,
+            "companyGroupCommission": 0.0,
+            "companyGroupCommissionClient": 0.0,
+            "consolidateFee": 0.0,
+            "serviceFee": 0.0,
+            "serviceFeeClient": 0.0,
+            "margin": 0.00,
+            "currency": "IRR",
+            "ticketType": 0,
+            "providerType": 3,
+            "providerId": 71,
+            "searchType": 2,
+            "source": null,
+            "clientTicketType": 0,
+            "flights": [
+                {
+                    "direction": false,
+                    "serializedExtraInfo": null,
+                    "departureAirportLocationCode": "THR",
+                    "cabinType": "Economy",
+                    "cabinCode": "Y",
+                    "departureAirportLocationTitle": " tehran mehrabad airport",
+                    "departureCityTitle": "tehran",
+                    "departureDateTime": "2021-10-20T13:30:00",
+                    "arrivalAirportLocationCode": "MHD",
+                    "arrivalAirportLocationTitle": "mashhad airport",
+                    "arrivalCityTitle": "mashhad",
+                    "arrivalDateTime": "2021-10-20T15:00:00",
+                    "elapsedTime": 90,
+                    "stops": 0,
+                    "remain": 9,
+                    "flightsSegments": [
+                        {
+                            "departureAirportLocationCode": "THR",
+                            "departureAirportLocationTitle": " tehran mehrabad airport",
+                            "departureCityTitle": "tehran",
+                            "departureAirportLocationTerminal": null,
+                            "departureDateTime": "2021-10-20T13:30:00",
+                            "arrivalAirportLocationCode": "MHD",
+                            "arrivalAirportLocationTerminal": null,
+                            "arrivalAirportLocationTitle": "mashhad airport",
+                            "arrivalCityTitle": "mashhad",
+                            "arrivalDateTime": "2021-10-20T15:00:00",
+                            "duration": 90,
+                            "durationTime": "01:30:00",
+                            "flightNumber": "IR464",
+                            "fareClass": "Y",
+                            "cabinCode": "Y",
+                            "cabinType": "Economy",
+                            "airplaneType": null,
+                            "airplaneTitle": "A320-200",
+                            "operatingAirlineCode": "IR",
+                            "operatingAirlineTitle": "iran air",
+                            "marketingAirlineCode": "IR",
+                            "marketingAirlineTitle": "iran air",
+                            "airlineCode": "IR",
+                            "airlineTitle": "iran air",
+                            "baggages": "20KG",
+                            "serializedExtraInfo": null
+                        }
+                    ]
+                }
+            ],
+            "priceDetails": [
+                {
+                    "passengerType": 0,
+                    "discount": 0.0,
+                    "totalPrice": 7720000.00,
+                    "listPrice": 7720000.0,
+                    "baseFare": 7190000.0,
+                    "fareTax": 530000.0,
+                    "serviceTax": 0.00,
+                    "price": 7720000.00,
+                    "markUp": 0.0,
+                    "markDown": 0.0,
+                    "commission": 0.0,
+                    "computedCommission": 0.0,
+                    "totalTax": 0.0,
+                    "roundedTotalPrice": 7720000.0,
+                    "companyGroupCommission": 0.0,
+                    "consolidateFee": 0.0,
+                    "serviceFee": 0.0,
+                    "serviceFeeClient": 0.0,
+                    "companyGroupCommissionClient": 0.0
+                }
+            ]
+        }
+    ],
+    "passengers": [
+        {
+            "type": 0,
+            "nationality": 0,
+            "latinFirstName": "karim",
+            "latinLastName": "daei",
+            "birthDay": "1998-02-17T00:00:00",
+            "gender": "1",
+            "nationalCode": "2002394156",
+            "firstName": "محمد",
+            "lastName": "داعی",
+            "isForeigners": false,
+            "passengerValidationType": 2
+        }
+    ],
+    "promotionCode": null,
+    "buyer": {
+        "firstName": "محمد",
+        "lastName": "داعی نژاد",
+        "mobile": "09106020624",
+        "email": "mohammadhack3@gmail.com",
+        "nationalCode": "2003290125"
+    }
+};
+
+const axios = require('axios');//.default;
+
+function setupAxios(axios) {
+    ticket_token = getItem("ticket_token", INVALID_TOKEN);
+
+    axios.interceptors.response.use(resp => resp, error => {
+        const {config: originalRequest} = error;
+        const errs = error + "";
+        console.log(errs);
+        if (errs === "Error: Request failed with status code 401" || (error && error.response && error.response.status === 401)) {//} || error && error.response)) {
+            // console.log("xxxxxxx");
+            originalRequest._retry = true;
+            return getTicketTokenPromise().then(({data}) => {
+
+                const {access_token} = data || {};
+                // console.log("refresh_token: "+access_token);
+                ticket_token = access_token;
+                saveItem("ticket_token", ticket_token);
+                originalRequest.headers['Authorization'] = `bearer ${access_token}`;
+                return axios(originalRequest);
+            }).catch((resp) => {
+                // console.log(resp);
+                return Promise.reject(resp)
+            });
+        }
+        return Promise.reject(error);
+    });
+}
+
+//TODO: setupAxios(axios);
+
+
+const doResults = (setValue, onError) => response => {
+    console.log(response);
+    const {data} = response || {};
+    const {messages, result, statusCode} = data || {messages: "Unknown error"};
+
+    // console.log(data);
+
+    if (statusCode !== 200) {
+        console.log(data);
+        // console.log(response);
+        onError(messages);
+    } else setValue(result);
+};
+
+
+function getConfig(action, data) {
+    console.log("ticket_token", ticket_token);
+    return {
+        method: 'post',
+        url: ticketBaseApi + action,
+        headers: {
+            'Authorization': `bearer ${ticket_token}`,
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(data)
+    };
+}
+
+
+/*
+{
+    "key": "ban",
+    "searchType": 1
+}
+ */
+export function getAirports(data, setLoader, onDone, page) {
+    const onError = getOnError(page);
+    // console.log(data);
+    const config = getConfig(Srv.airports, data);
+    setLoader(true);
+    axios(config).then(doResults(onDone, onError)).catch(onError).finally(() => setLoader(false));
+}
+
+
+/*
+{
+	"itineraries":[{
+		"OriginLocation":"ika",
+		"DestinationLocation":"ist",
+		"DepartureDate":"2021-06-25",
+		"ReturnDate":null
+	}],
+	"ChildQuantity":0,
+	"InfantQuantity":0,
+	"AdultQuantity":1,
+	"CabinType":3,
+	"SearchType":1
+}
+ */
+export function getSeaerch(data, setLoader, onDone, page) {
+    const onError = getOnError(page);
+    // console.log("getSeaerch", data);
+    const config = getConfig(Srv.search, data);
+    setLoader(true);
+    axios(config).then(doResults(onDone, onError)).catch(onError).finally(() => setLoader(false));
+}
+
+// flight/book
+
+
+export function doFlightBook(data, setLoader, onDone, page) {
+    const onError = getOnError(page);
+    const config = getConfig(Srv.book, data);
+    // console.log(config);
+    setLoader(true);
+    axios(config).then(doResults(onDone, onError)).catch(onError).finally(() => setLoader(false));
+}
+
+export function doFlightIssue(invoiceId, setLoader, onDone, page) {
+    // onDone({data: "alaki"});
+    // return;
+
+    const onError = getOnError(page);
+    const config = getConfig(Srv.issue, {invoiceId});
+    // console.log(config);
+    setLoader(true);
+    axios(config).then(doResults(onDone, onError)).catch(onError).finally(() => setLoader(false));
+}
+
+
+const token_config = {
+    method: 'post',
+    url: `${ticketBaseUrl}/token`,
+    headers: {
+        'Content-Type': 'text/plain'
+    },
+    data: ticket_credentials
+};
+
+const getTicketTokenPromise = () => axios(token_config);
+
+export function getTicketToken(setLoader, onDone = console.log, onError = console.log) {
+    // return;
+    setLoader(true);
+    getTicketTokenPromise()
+        .then(({data}) => {
+            const {access_token} = data || {};
+            ticket_token = access_token;
+            // console.log(data);
+            onDone(access_token);
+        })
+        .catch(onError)
+        .finally(() => setLoader(false));
+
+    //axios.defaults.headers.common['x-access-token'] = token;
+}
+
+const issuedTicket = [
+    {
+        "ticketCreateDate": "2021-06-21T14:18:11.4503296+04:30",
+        "referenceCode": "J26K2J",
+        "status": "صدور بلیط",
+        "price": 10000.00,
+        "baseFare": 10000.00,
+        "discount": 0.00,
+        "totalPrice": 10000.00,
+        "totalPriceCurrencyCode": "IRR",
+        "flightRules": [],
+        "pnrRemarks": null,
+        "passengers": [
+            {
+                "englishFirstName": "Rasoul",
+                "englishLastName": "Jafari",
+                "firstName": "رسول",
+                "lastName": "جعفری",
+                "nationalCode": "4679389427",
+                "gender": "Mr",
+                "eticketNumber": "102421191",
+                "ticketCreateDate": "2021-06-21T14:18:11.4503296+04:30",
+                "ticketCreatePersianDate": "1400/03/31",
+                "referenceCode": "J26K2J",
+                "baseFare": 10000.00,
+                "totalTax": 0.00,
+                "totalPrice": 10000.00,
+                "ticketType": 1,
+                "type": 0,
+                "typeTitle": "Adult",
+                "baggaes": [],
+                "itineraries": [
+                    {
+                        "providerType": 4,
+                        "direction": false,
+                        "departureAirportLocationCode": "IKA",
+                        "departureAirportLocationTitle": "فرودگاه امام خمینی تهران",
+                        "departureCityTitle": "تهران",
+                        "cabinType": "Economy",
+                        "persianCabinType": "اقتصادی",
+                        "cabinCode": "IST  W5  NN6",
+                        "departureDateTime": "2021-07-19T06:50:00",
+                        "arrivalAirportLocationCode": "IST",
+                        "arrivalAirportLocationTitle": "istanbul new airport",
+                        "arrivalCityTitle": "استانبول",
+                        "arrivalDateTime": "2021-07-19T08:35:00",
+                        "elapsedTimePerMinute": 105,
+                        "stops": 0,
+                        "segments": [
+                            {
+                                "departureAirportLocationCode": "IKA",
+                                "departureAirportLocationTitle": "tehran imam khomeini airport",
+                                "departureCityTitle": "تهران",
+                                "departureAirportLocationTerminal": null,
+                                "departureDateTime": "2021-07-19T06:50:00",
+                                "departurePersianDate": "1400/04/28",
+                                "departurePersianTime": "06:50",
+                                "arrivalAirportLocationCode": "IST",
+                                "arrivalAirportLocationTitle": "istanbul new airport",
+                                "arrivalCityTitle": "استانبول",
+                                "arrivalAirportLocationTerminal": null,
+                                "arrivalDateTime": "2021-07-19T08:35:00",
+                                "arrivalPersianDate": "1400/04/28",
+                                "arrivalPersianTime": "08:35",
+                                "duration": 105,
+                                "flightNumber": "112",
+                                "fareClass": "IST  W5  NN6",
+                                "cabinCode": "B",
+                                "cabinType": "Economy",
+                                "airplaneCode": "310",
+                                "airlineCode": "W5",
+                                "marketingAirlineCode": "W5",
+                                "baggages": "20 KG",
+                                "airlineTitle": "ماهان",
+                                "airlineEnglishTitle": "mahan air",
+                                "airlineLogoUrl": "https://cdn01.safiran.ir/AirlineLogo/W5.png"
+                            }
+                        ]
+                    }
+                ],
+                "airLinePolicies": []
+            }
+        ],
+        "itineraries": [
+            {
+                "providerType": 4,
+                "direction": false,
+                "departureAirportLocationCode": "IKA",
+                "departureAirportLocationTitle": "فرودگاه امام خمینی تهران",
+                "departureCityTitle": "تهران",
+                "cabinType": "Economy",
+                "persianCabinType": "اقتصادی",
+                "cabinCode": "IST  W5  NN6",
+                "departureDateTime": "2021-07-19T06:50:00",
+                "arrivalAirportLocationCode": "IST",
+                "arrivalAirportLocationTitle": "istanbul new airport",
+                "arrivalCityTitle": "استانبول",
+                "arrivalDateTime": "2021-07-19T08:35:00",
+                "elapsedTimePerMinute": 105,
+                "stops": 0,
+                "segments": [
+                    {
+                        "departureAirportLocationCode": "IKA",
+                        "departureAirportLocationTitle": "tehran imam khomeini airport",
+                        "departureCityTitle": "تهران",
+                        "departureAirportLocationTerminal": null,
+                        "departureDateTime": "2021-07-19T06:50:00",
+                        "departurePersianDate": "1400/04/28",
+                        "departurePersianTime": "06:50",
+                        "arrivalAirportLocationCode": "IST",
+                        "arrivalAirportLocationTitle": "istanbul new airport",
+                        "arrivalCityTitle": "استانبول",
+                        "arrivalAirportLocationTerminal": null,
+                        "arrivalDateTime": "2021-07-19T08:35:00",
+                        "arrivalPersianDate": "1400/04/28",
+                        "arrivalPersianTime": "08:35",
+                        "duration": 105,
+                        "flightNumber": "112",
+                        "fareClass": "IST  W5  NN6",
+                        "cabinCode": "B",
+                        "cabinType": "Economy",
+                        "airplaneCode": "310",
+                        "airlineCode": "W5",
+                        "marketingAirlineCode": "W5",
+                        "baggages": "20 KG",
+                        "airlineTitle": "ماهان",
+                        "airlineEnglishTitle": "mahan air",
+                        "airlineLogoUrl": "https://cdn01.safiran.ir/AirlineLogo/W5.png"
+                    }
+                ]
+            }
+        ],
+        "buyerName": "محمد داعی نژاد",
+        "buyerEmail": "mohammadhack3@gmail.com",
+        "buyerMobile": "09106020624",
+        "receiverEmail": "",
+        "invoiceId": 69936,
+        "invoiceTrackingCode": "3F1F4C27AD34",
+        "ticketType": 1
+    }
+];

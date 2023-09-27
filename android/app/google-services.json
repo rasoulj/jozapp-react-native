@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "320763503123",
+    "firebase_url": "https://jozdan.firebaseio.com",
+    "project_id": "jozdan",
+    "storage_bucket": "jozdan.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320763503123:android:dbeede3848e9869c8cd5e6",
+        "android_client_info": {
+          "package_name": "com.rasoulj.jozapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "320763503123-mnas86v8j5u8rfn7e9p2kpoltdhdgee7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCknqzWBoVwNRYyXAA4wtgDvOlJzqGS_l4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "320763503123-mnas86v8j5u8rfn7e9p2kpoltdhdgee7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
